@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
 
 from vinyl_set_builder.domain.exceptions import IncompatibleCrateError
@@ -45,3 +46,29 @@ def build_set_order(tracks: list[Track]) -> tuple[list[Track], list[Transition]]
         current_id = next_id
 
     return order, transitions
+
+
+@dataclass(frozen=True)
+class SetStep:
+    track: Track
+    transition: Transition | None  # None только для самого первого трека
+
+
+class SetOrder:
+    """Собственный итератор по построенному сету: отдаёт пары (трек, входящий переход)."""
+
+    def __init__(self, order: list[Track], transitions: list[Transition]) -> None:
+        self._steps: list[SetStep] = [SetStep(order[0], None)] + [
+            SetStep(transition.to_track, transition) for transition in transitions
+        ]
+        self._index = 0
+
+    def __iter__(self) -> Iterator[SetStep]:
+        return self
+
+    def __next__(self) -> SetStep:
+        if self._index >= len(self._steps):
+            raise StopIteration
+        step = self._steps[self._index]
+        self._index += 1
+        return step
