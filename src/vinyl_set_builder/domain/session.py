@@ -28,8 +28,8 @@ class GraphBuildSession:
         exc_type: type[BaseException] | None,
         exc_value: BaseException | None,
         traceback: TracebackType | None,
-    ) -> bool:
+    ) -> None:
         assert self._start_time is not None
         self.duration_seconds = time.monotonic() - self._start_time
         GraphBuildSession._locked = False
-        return False  # никогда не подавляет исключения
+        # возврат None (ложное значение) никогда не подавляет исключения
