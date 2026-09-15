@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from itertools import count
 
 from vinyl_set_builder.domain.models import Track

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from fastapi import FastAPI
 
 from vinyl_set_builder.api.routes import router

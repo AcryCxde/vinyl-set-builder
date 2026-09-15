@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from collections.abc import Iterator
 
 from vinyl_set_builder.domain.camelot import are_keys_compatible

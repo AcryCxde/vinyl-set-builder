@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 
 from vinyl_set_builder.domain.camelot import parse_camelot_key

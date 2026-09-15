@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 class VinylSetBuilderError(Exception):
     """Базовый класс для всех доменных ошибок vinyl_set_builder."""
 

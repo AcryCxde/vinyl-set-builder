@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import re
 
 from vinyl_set_builder.domain.exceptions import InvalidCamelotKeyError
