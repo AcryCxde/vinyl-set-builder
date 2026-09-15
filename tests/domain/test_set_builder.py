@@ -2,7 +2,7 @@ import pytest
 
 from vinyl_set_builder.domain.exceptions import IncompatibleCrateError
 from vinyl_set_builder.domain.models import Track
-from vinyl_set_builder.domain.set_builder import Transition, build_set_order
+from vinyl_set_builder.domain.set_builder import build_set_order
 
 
 def test_build_set_order_raises_with_fewer_than_two_tracks():

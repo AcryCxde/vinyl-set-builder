@@ -20,18 +20,26 @@
 ## Запуск
 
 ```bash
-pip install -e ".[dev]"
-uvicorn vinyl_set_builder.main:app --reload
+make install    # создаёт .venv и ставит пакет вместе с dev-зависимостями
+make run        # чистый запуск, крейт пустой
+make run-mock   # запуск с уже заполненным крейтом (см. ниже)
 ```
 
 Откройте `http://localhost:8000/docs` для интерактивного Swagger UI — добавьте несколько треков через
 `POST /tracks`, затем вызовите `POST /build-set`, чтобы получить рекомендованный порядок.
 
-## Тестирование
+`make run-mock` сразу засевает крейт демонстрационным набором современного хип-хопа (Tyler, The
+Creator, Post Malone, Kendrick Lamar) — можно сразу вызвать `POST /build-set` и увидеть результат,
+не добавляя треки вручную. Набор специально подобран так, что пять треков образуют плавную цепочку
+по темпу и тональности, а последний (HUMBLE.) — намеренный «чужак», на нём виден жёсткий обрыв.
+
+## Проверки
 
 ```bash
-pytest
-mypy src
+make lint       # ruff
+make typecheck  # mypy --strict
+make test       # pytest
+make check      # всё вместе
 ```
 
 ## Что сознательно не входит в объём

@@ -1,4 +1,3 @@
-import pytest
 
 from vinyl_set_builder.domain.exceptions import (
     IncompatibleCrateError,
