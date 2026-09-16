@@ -1,16 +1,34 @@
+import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
+from vinyl_set_builder.api import TrackCreate
 from vinyl_set_builder.main import app
 
 
 def make_client():
     # каждый тест получает свежий экземпляр репозитория (а не просто очищенный словарь), чтобы
     # тесты не утекали состоянием друг в друга, включая счётчик id
-    from vinyl_set_builder.api import routes
+    from vinyl_set_builder import api
     from vinyl_set_builder.repository import TrackRepository
 
-    routes.repository = TrackRepository()
+    api.repository = TrackRepository()
     return TestClient(app)
+
+
+def test_track_create_accepts_valid_payload():
+    payload = TrackCreate(artist="A", title="T1", bpm=120.0, key="8A", genre="house", tags={"dark"})
+    assert payload.tags == {"dark"}
+
+
+def test_track_create_defaults_tags_to_empty_set():
+    payload = TrackCreate(artist="A", title="T1", bpm=120.0, key="8A", genre="house")
+    assert payload.tags == set()
+
+
+def test_track_create_rejects_non_positive_bpm():
+    with pytest.raises(ValidationError):
+        TrackCreate(artist="A", title="T1", bpm=0, key="8A", genre="house")
 
 
 def test_create_track_returns_201_with_assigned_id():

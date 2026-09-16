@@ -1,19 +1,47 @@
 import logging
 
 from fastapi import APIRouter, HTTPException, status
+from pydantic import BaseModel, Field
 
-from vinyl_set_builder.api.schemas import (
-    SetOrderResponse,
-    SetStepResponse,
-    TrackCreate,
-    TrackResponse,
-    TransitionResponse,
-)
 from vinyl_set_builder.domain.exceptions import IncompatibleCrateError, InvalidCamelotKeyError
 from vinyl_set_builder.domain.models import Track
 from vinyl_set_builder.domain.session import GraphBuildSession
 from vinyl_set_builder.domain.set_builder import SetOrder, build_set_order
 from vinyl_set_builder.repository import TrackRepository
+
+
+class TrackCreate(BaseModel):
+    artist: str
+    title: str
+    bpm: float = Field(gt=0)
+    key: str
+    genre: str
+    tags: set[str] = Field(default_factory=set)
+
+
+class TrackResponse(BaseModel):
+    id: int
+    artist: str
+    title: str
+    bpm: float
+    key: str
+    genre: str
+    tags: set[str]
+
+
+class TransitionResponse(BaseModel):
+    to_track_id: int
+    is_hard_cut: bool
+
+
+class SetStepResponse(BaseModel):
+    track: TrackResponse
+    transition: TransitionResponse | None
+
+
+class SetOrderResponse(BaseModel):
+    steps: list[SetStepResponse]
+
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
