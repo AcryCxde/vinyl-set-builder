@@ -16,8 +16,6 @@ class TrackRepository:
         title: str,
         bpm: float,
         key: str,
-        genre: str,
-        tags: set[str] | None = None,
     ) -> Track:
         track = Track(
             id=next(self._id_counter),
@@ -25,8 +23,6 @@ class TrackRepository:
             title=title,
             bpm=bpm,
             key=key,
-            genre=genre,
-            tags=tags if tags is not None else set(),
         )
         self._tracks[track.id] = track
         return track

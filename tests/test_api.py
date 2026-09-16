@@ -17,21 +17,9 @@ def client():
     return TestClient(app)
 
 
-@pytest.mark.parametrize(
-    ("extra_kwargs", "expected_tags"),
-    [
-        pytest.param({"tags": {"dark"}}, {"dark"}, id="explicit_tags"),
-        pytest.param({}, set(), id="defaults_to_empty_set"),
-    ],
-)
-def test_track_create_tags(extra_kwargs, expected_tags):
-    payload = TrackCreate(artist="A", title="T1", bpm=120.0, key="8A", genre="house", **extra_kwargs)
-    assert payload.tags == expected_tags
-
-
 def test_track_create_rejects_non_positive_bpm():
     with pytest.raises(ValidationError):
-        TrackCreate(artist="A", title="T1", bpm=0, key="8A", genre="house")
+        TrackCreate(artist="A", title="T1", bpm=0, key="8A")
 
 
 @pytest.mark.parametrize(
@@ -44,7 +32,7 @@ def test_track_create_rejects_non_positive_bpm():
 def test_create_track(client, key, expected_status):
     response = client.post(
         "/tracks",
-        json={"artist": "A", "title": "T1", "bpm": 120.0, "key": key, "genre": "house"},
+        json={"artist": "A", "title": "T1", "bpm": 120.0, "key": key},
     )
     assert response.status_code == expected_status
     if expected_status == 201:
@@ -52,8 +40,8 @@ def test_create_track(client, key, expected_status):
 
 
 def test_list_tracks_returns_everything_added(client):
-    client.post("/tracks", json={"artist": "A", "title": "T1", "bpm": 120.0, "key": "8A", "genre": "house"})
-    client.post("/tracks", json={"artist": "B", "title": "T2", "bpm": 121.0, "key": "8A", "genre": "house"})
+    client.post("/tracks", json={"artist": "A", "title": "T1", "bpm": 120.0, "key": "8A"})
+    client.post("/tracks", json={"artist": "B", "title": "T2", "bpm": 121.0, "key": "8A"})
     response = client.get("/tracks")
     assert response.status_code == 200
     assert len(response.json()) == 2
@@ -68,8 +56,8 @@ def test_list_tracks_returns_everything_added(client):
 )
 def test_build_set(client, track_count, expected_status):
     payloads = [
-        {"artist": "A", "title": "T1", "bpm": 120.0, "key": "8A", "genre": "house"},
-        {"artist": "B", "title": "T2", "bpm": 121.0, "key": "8A", "genre": "house"},
+        {"artist": "A", "title": "T1", "bpm": 120.0, "key": "8A"},
+        {"artist": "B", "title": "T2", "bpm": 121.0, "key": "8A"},
     ]
     for payload in payloads[:track_count]:
         client.post("/tracks", json=payload)

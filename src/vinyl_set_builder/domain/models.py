@@ -1,5 +1,5 @@
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from vinyl_set_builder.domain.exceptions import InvalidCamelotKeyError
 
@@ -38,8 +38,6 @@ class Track:
     title: str
     bpm: float
     key: str
-    genre: str
-    tags: set[str] = field(default_factory=set)
 
     def __post_init__(self) -> None:
         parse_camelot_key(self.key)  # вызывает InvalidCamelotKeyError при неверном формате

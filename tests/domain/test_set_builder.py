@@ -57,13 +57,13 @@ def test_build_compatibility_graph(graph_tracks, bpm_tolerance, expected_graph):
     "tracks",
     [
         pytest.param(
-            [Track(id=1, artist="A", title="T1", bpm=120.0, key="8A", genre="house")],
+            [Track(id=1, artist="A", title="T1", bpm=120.0, key="8A")],
             id="fewer_than_two_tracks",
         ),
         pytest.param(
             [
-                Track(id=1, artist="A", title="T1", bpm=90.0, key="1A", genre="house"),
-                Track(id=2, artist="B", title="T2", bpm=175.0, key="7B", genre="dnb"),
+                Track(id=1, artist="A", title="T1", bpm=90.0, key="1A"),
+                Track(id=2, artist="B", title="T2", bpm=175.0, key="7B"),
             ],
             id="no_compatible_pair_in_the_crate",
         ),

@@ -9,19 +9,6 @@ def test_track_coordinate_is_a_bpm_key_tuple(make_track):
     assert track.coordinate == (120.0, "5B")
 
 
-@pytest.mark.parametrize(
-    ("tags_kwarg", "expected"),
-    [
-        pytest.param(None, set(), id="defaults_to_empty_set"),
-        pytest.param({"dark", "energy:high"}, {"dark", "energy:high"}, id="accepts_explicit_tags"),
-    ],
-)
-def test_track_tags(make_track, tags_kwarg, expected):
-    track = make_track(tags=tags_kwarg)
-    assert track.tags == expected
-    assert isinstance(track.tags, set)
-
-
 def test_track_rejects_invalid_camelot_key(make_track):
     with pytest.raises(InvalidCamelotKeyError):
         make_track(key="not-a-key")

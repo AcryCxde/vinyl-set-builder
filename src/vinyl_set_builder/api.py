@@ -15,8 +15,6 @@ class TrackCreate(BaseModel):
     title: str
     bpm: float = Field(gt=0)
     key: str
-    genre: str
-    tags: set[str] = Field(default_factory=set)
 
 
 class TrackResponse(BaseModel):
@@ -25,8 +23,6 @@ class TrackResponse(BaseModel):
     title: str
     bpm: float
     key: str
-    genre: str
-    tags: set[str]
 
 
 class TransitionResponse(BaseModel):
@@ -55,8 +51,6 @@ def _to_track_response(track: Track) -> TrackResponse:
         title=track.title,
         bpm=track.bpm,
         key=track.key,
-        genre=track.genre,
-        tags=track.tags,
     )
 
 
@@ -68,8 +62,6 @@ def create_track(payload: TrackCreate) -> TrackResponse:
             title=payload.title,
             bpm=payload.bpm,
             key=payload.key,
-            genre=payload.genre,
-            tags=payload.tags,
         )
     except InvalidCamelotKeyError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

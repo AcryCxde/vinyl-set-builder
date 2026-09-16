@@ -13,9 +13,7 @@ def make_track() -> Callable[..., Track]:
         title: str = "Building Steam",
         bpm: float = 91.0,
         key: str = "8A",
-        genre: str = "trip-hop",
-        tags: set[str] | None = None,
     ) -> Track:
-        return Track(id=id, artist=artist, title=title, bpm=bpm, key=key, genre=genre, tags=tags or set())
+        return Track(id=id, artist=artist, title=title, bpm=bpm, key=key)
 
     return _make
