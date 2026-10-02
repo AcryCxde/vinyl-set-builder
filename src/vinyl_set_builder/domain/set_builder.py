@@ -32,7 +32,6 @@ def build_compatibility_graph(
 
 @dataclass(frozen=True)
 class Transition:
-    from_track: Track
     to_track: Track
     is_hard_cut: bool
 
@@ -61,7 +60,7 @@ def build_set_order(tracks: list[Track]) -> tuple[list[Track], list[Transition]]
 
         next_id = min(pool, key=lambda tid: abs(current.bpm - by_id[tid].bpm))
         next_track = by_id[next_id]
-        transitions.append(Transition(from_track=current, to_track=next_track, is_hard_cut=is_hard_cut))
+        transitions.append(Transition(to_track=next_track, is_hard_cut=is_hard_cut))
 
         order.append(next_track)
         visited.add(next_id)

@@ -41,8 +41,3 @@ class Track:
 
     def __post_init__(self) -> None:
         parse_camelot_key(self.key)  # вызывает InvalidCamelotKeyError при неверном формате
-
-    @property
-    def coordinate(self) -> tuple[float, str]:
-        """Неизменяемая пара (bpm, key), используемая для сравнения совместимости."""
-        return (self.bpm, self.key)

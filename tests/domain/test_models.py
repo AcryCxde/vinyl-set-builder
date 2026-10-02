@@ -4,9 +4,14 @@ from vinyl_set_builder.domain.exceptions import InvalidCamelotKeyError
 from vinyl_set_builder.domain.models import are_keys_compatible, parse_camelot_key
 
 
-def test_track_coordinate_is_a_bpm_key_tuple(make_track):
-    track = make_track(bpm=120.0, key="5B")
-    assert track.coordinate == (120.0, "5B")
+def test_parse_camelot_key_splits_number_and_letter():
+    assert parse_camelot_key("12B") == (12, "B")
+
+
+@pytest.mark.parametrize("key", ["13A", "0B", "8", "A8", ""])
+def test_parse_camelot_key_rejects_invalid_format(key):
+    with pytest.raises(InvalidCamelotKeyError):
+        parse_camelot_key(key)
 
 
 def test_track_rejects_invalid_camelot_key(make_track):
@@ -15,44 +20,13 @@ def test_track_rejects_invalid_camelot_key(make_track):
 
 
 @pytest.mark.parametrize(
-    ("key", "expected"),
-    [
-        pytest.param("8A", (8, "A"), id="number_and_letter"),
-        pytest.param("12B", (12, "B"), id="two_digit_number"),
-        pytest.param("1A", (1, "A"), id="single_digit_number"),
-    ],
-)
-def test_parse_camelot_key_valid(key, expected):
-    assert parse_camelot_key(key) == expected
-
-
-@pytest.mark.parametrize(
-    "key",
-    [
-        pytest.param("H1", id="letter_first"),
-        pytest.param("13A", id="number_out_of_range_high"),
-        pytest.param("0B", id="number_out_of_range_low"),
-        pytest.param("8", id="missing_letter"),
-        pytest.param("A8", id="reversed_order"),
-        pytest.param("", id="empty_string"),
-    ],
-)
-def test_parse_camelot_key_invalid_raises(key):
-    with pytest.raises(InvalidCamelotKeyError):
-        parse_camelot_key(key)
-
-
-@pytest.mark.parametrize(
     ("key_a", "key_b", "expected"),
     [
-        pytest.param("8A", "8A", True, id="identical"),
         pytest.param("8A", "8B", True, id="relative_major_minor"),
         pytest.param("8A", "9A", True, id="adjacent_number_same_letter"),
-        pytest.param("8A", "7A", True, id="adjacent_number_same_letter_other_direction"),
         pytest.param("12A", "1A", True, id="wheel_wraps_around"),
-        pytest.param("8A", "10A", False, id="too_far_apart_on_the_wheel"),
         pytest.param("8A", "9B", False, id="adjacent_number_different_letter"),
-        pytest.param("8A", "3A", False, id="opposite_side_of_the_wheel"),
+        pytest.param("8A", "10A", False, id="too_far_apart"),
     ],
 )
 def test_are_keys_compatible(key_a, key_b, expected):

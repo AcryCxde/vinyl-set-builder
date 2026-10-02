@@ -29,6 +29,3 @@ class TrackRepository:
 
     def list_all(self) -> list[Track]:
         return list(self._tracks.values())
-
-    def get(self, track_id: int) -> Track | None:
-        return self._tracks.get(track_id)
