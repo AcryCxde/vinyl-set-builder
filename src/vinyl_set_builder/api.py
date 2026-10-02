@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 from vinyl_set_builder.domain.exceptions import IncompatibleCrateError, InvalidCamelotKeyError
 from vinyl_set_builder.domain.models import Track
-from vinyl_set_builder.domain.session import GraphBuildSession
 from vinyl_set_builder.domain.set_builder import SetOrder, build_set_order
+from vinyl_set_builder.domain.timer import BuildTimer
 from vinyl_set_builder.repository import TrackRepository
 
 
@@ -77,9 +77,9 @@ def list_tracks() -> list[TrackResponse]:
 def build_set() -> SetOrderResponse:
     tracks = repository.list_all()
     try:
-        with GraphBuildSession() as session:
+        with BuildTimer() as timer:
             order, transitions = build_set_order(tracks)
-        logger.info("построен сет из %d треков за %.4fs", len(tracks), session.duration_seconds)
+        logger.info("построен сет из %d треков за %.4fs", len(tracks), timer.duration_seconds)
     except IncompatibleCrateError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 

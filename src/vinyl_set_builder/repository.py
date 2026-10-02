@@ -4,7 +4,7 @@ from vinyl_set_builder.domain.models import Track
 
 
 class TrackRepository:
-    """Хранилище в памяти для единственного неявного крейта. Персистентность не предусмотрена намеренно."""
+    """Хранилище треков в памяти."""
 
     def __init__(self) -> None:
         self._tracks: dict[int, Track] = {}
